@@ -28,7 +28,7 @@ module ActiveRecord
 
         def add_column_options!(sql, options)
           if options[:array] || options[:column].try(:array)
-            sql.gsub!(/(.*)\s(\w+)$/, '\1 array(\2)')
+            sql.gsub!(/(.*)\s(.*)$/, '\1 array(\2)')
           end
           super(sql, options)
         end
