@@ -67,6 +67,14 @@ where table_name = '#{quote_table_name(table_name)}' and constraint_type = 'PRIM
           puts
         end
 
+        def remove_column(*args)
+          puts
+          puts "#########"
+          puts "Dropping columns is currently not supported by Crate"
+          puts "#########"
+          puts
+        end
+
       end
     end
   end
