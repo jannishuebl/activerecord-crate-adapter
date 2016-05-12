@@ -131,8 +131,9 @@ module ActiveRecord
 
       def columns(table_name) #:nodoc:
         cols = @connection.table_structure(table_name).map do |field|
-          name = dotted_name(field[2])
-          CrateColumn.new(name, nil, field[4], nil)
+          name = dotted_name(field[0])
+          type = lookup_cast_type(field[1])
+          CrateColumn.new(name, nil, type, nil)
         end
         cols
       end
