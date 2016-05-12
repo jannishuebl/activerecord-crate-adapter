@@ -73,7 +73,8 @@ module ActiveRecord
           datetime: {name: "timestamp"},
           timestamp: {name: "timestamp"},
           object: {name: "object"},
-          array: {name: "array"}
+          array: {name: "array"},
+          ip: {name: "ip"},
       }
 
       class BindSubstitution < Arel::Visitors::Crate # :nodoc:
@@ -194,6 +195,11 @@ module ActiveRecord
           raise "Array columns must specify an :array_type (e.g. array_type: :string)" unless array_type.present?
           column name, "array(#{array_type})", options.merge(array: true)
         end
+
+        def ip(name, options={})
+          column name, 'ip', options
+        end
+        alias_method :inet, :ip
 
         def new_column_definition(name, type, options)
           options = remove_unsupported_options(options)
