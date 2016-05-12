@@ -201,6 +201,11 @@ module ActiveRecord
         end
         alias_method :inet, :ip
 
+        def references(name, options = {})
+          options[:type] ||= :string
+          super(name, options)
+        end
+
         def new_column_definition(name, type, options)
           options = remove_unsupported_options(options)
           column = super(name, type, options)

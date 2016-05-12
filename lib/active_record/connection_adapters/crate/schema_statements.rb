@@ -75,6 +75,11 @@ where table_name = '#{quote_table_name(table_name)}' and constraint_type = 'PRIM
           puts
         end
 
+        def add_reference(table_name, column_name, options = {})
+          options[:type] ||= :string
+          super(table_name, column_name, options)
+        end
+
       end
     end
   end
