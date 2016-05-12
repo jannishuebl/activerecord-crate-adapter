@@ -198,6 +198,10 @@ module ActiveRecord
           column name, "array(#{array_type})", options.merge(array: true)
         end
 
+        def hstore(name, options = {})
+          column name, "object(dynamic)", options
+        end
+
         def ip(name, options={})
           column name, 'ip', options
         end
