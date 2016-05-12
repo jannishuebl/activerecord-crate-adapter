@@ -177,11 +177,7 @@ module ActiveRecord
         end
 
         def column(name, type = nil, options = {})
-          super
-          column = self[name]
-          column.array = options[:array]
-          column.object = options[:object]
-          self
+          super(name, type, options)
         end
 
         def object(name, options = {})
@@ -199,7 +195,30 @@ module ActiveRecord
           column name, "array(#{array_type})", options.merge(array: true)
         end
 
+        def new_column_definition(name, type, options)
+          options = remove_unsupported_options(options)
+          column = super(name, type, options)
+          column.array = options[:array]
+          column.object = options[:object]
+          column
+        end
+
         private
+
+        def remove_unsupported_options(options = {})
+          print_unsupported("null:false/true") && options.delete(:null) if options.has_key?(:null)
+          print_unsupported("DEFAULT") && options.delete(:default) if options.has_key?(:default)
+          options
+        end
+
+        def print_unsupported(option_name)
+          puts
+          puts "#########"
+          puts "Option #{option_name} is currently not supported by Crate"
+          puts "#########"
+          puts
+          true
+        end
 
         def create_column_definition(name, type)
           ColumnDefinition.new name, type
