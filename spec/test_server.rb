@@ -34,7 +34,7 @@ class TestServer
   end
 
   def start
-    cmd = "sh #{File.join(@crate_home, 'bin', 'crate')} #{start_params}"
+    cmd = "sh /usr/share/crate/bin/crate #{start_params}"
     @pid = spawn(cmd, out: "/tmp/crate_test_server.out",
                  err: "/tmp/crate_test_server.err")
     Process.detach(@pid)

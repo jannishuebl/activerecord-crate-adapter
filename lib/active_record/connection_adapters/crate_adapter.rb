@@ -83,10 +83,10 @@ module ActiveRecord
         include Arel::Visitors::BindVisitor
       end
 
-      def initialize(connection, logger, pool, config)
+      def initialize(connection, logger, pool, config={})
         @port = config[:port]
         @host = config[:host]
-        super(connection, logger, pool)
+        super(connection, logger, config)
         @schema_cache = SchemaCache.new self
         @visitor = Arel::Visitors::Crate.new self
         @quoted_column_names = {}
@@ -108,6 +108,10 @@ module ActiveRecord
       # Adds `:array` as a valid migration key
       def migration_keys
         super + [:array, :object_schema_behaviour, :object_schema]
+      end
+
+      def arel_visitor
+        Arel::Visitors::Crate.new self
       end
 
 
@@ -257,9 +261,9 @@ module ActiveRecord
 
       end
 
-      def create_table_definition(name, temporary, options, as = nil)
-        TableDefinition.new native_database_types, name, temporary, options, as
-      end
+       def create_table_definition(*args)
+          TableDefinition.new(*args)
+       end
 
       def native_database_types
         NATIVE_DATABASE_TYPES
