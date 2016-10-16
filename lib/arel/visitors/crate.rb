@@ -23,7 +23,13 @@ module Arel
   module Visitors
     class Crate < Arel::Visitors::ToSql
 
+      def preparable
+        false
+      end
+
       private
+
+
     end
   end
 end

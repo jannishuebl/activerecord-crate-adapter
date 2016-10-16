@@ -29,7 +29,7 @@ module CrateObject
           object.gsub!('=', ':')
           object = JSON.parse("{#{object}}")
       end
-      new(object.symbolize_keys)
+      object ? new(object.symbolize_keys) : nil
     end
 
     def dump(object)

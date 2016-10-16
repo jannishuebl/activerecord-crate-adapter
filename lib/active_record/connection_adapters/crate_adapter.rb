@@ -21,13 +21,14 @@
 
 require 'active_record'
 require 'active_record/base'
-require 'active_record/base'
 require 'arel/arel_crate'
+require 'active_record/connection_adapters/abstract_adapter'
 require 'arel/visitors/bind_visitor'
 require 'active_support/dependencies/autoload'
 require 'active_support/callbacks'
 require 'active_support/core_ext/string'
-require 'active_record/connection_adapters/abstract_adapter'
+require 'active_record/connection_adapters/crate/type'
+require 'active_record/connection_adapters/crate/type_metadata'
 require 'active_record/connection_adapters/statement_pool'
 require 'active_record/connection_adapters/column'
 require 'active_record/connection_adapters/crate/schema_statements'
@@ -79,6 +80,8 @@ module ActiveRecord
           ip: {name: "ip"},
       }
 
+
+
       class BindSubstitution < Arel::Visitors::Crate # :nodoc:
         include Arel::Visitors::BindVisitor
       end
@@ -90,7 +93,17 @@ module ActiveRecord
         @schema_cache = SchemaCache.new self
         @visitor = Arel::Visitors::Crate.new self
         @quoted_column_names = {}
+        @type_map = Type::HashLookupTypeMap.new
+        initialize_type_map(type_map)
+
         connect
+      end
+
+
+      def initialize_type_map(m)
+        m.register_type 'string_array', Crate::Type::Array.new
+        m.register_type 'integer_array', Crate::Type::Array.new
+        m.register_type 'boolean_array', Crate::Type::Array.new
       end
 
       def adapter_name
@@ -139,11 +152,12 @@ module ActiveRecord
       def columns(table_name) #:nodoc:
         cols = @connection.table_structure(table_name).map do |field|
           name = dotted_name(field[0])
-          type = lookup_cast_type(field[1])
-          CrateColumn.new(name, nil, type, nil)
+          sql_type_metadata = fetch_type_metadata field[1]
+          CrateColumn.new(name, nil, sql_type_metadata)
         end
         cols
       end
+
 
       def dotted_name(name)
         name.gsub(%r(\[['"]), '.').delete(%{'"]})
@@ -268,6 +282,7 @@ module ActiveRecord
       def native_database_types
         NATIVE_DATABASE_TYPES
       end
+
     end
   end
 

@@ -25,6 +25,7 @@ require 'byebug'
 require 'activerecord-crate-adapter'
 require 'logger'
 #require 'debugger'
+require 'byebug'
 
 require 'dummy/app/models/address'
 require 'dummy/app/models/post'

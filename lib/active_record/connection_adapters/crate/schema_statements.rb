@@ -28,7 +28,7 @@ module ActiveRecord
 
         def add_column_options!(sql, options)
           if options[:array] || options[:column].try(:array)
-            sql.gsub!(/(.*)\s(.*)$/, '\1 array(\2)')
+            sql.gsub!(/(.*)\s(\w+)$/, '\1 array(\2)')
           end
           super(sql, options)
         end
@@ -36,10 +36,10 @@ module ActiveRecord
       end
 
       module SchemaStatements
-        def primary_key(table_name)
+        def primary_keys(table_name)
           res = @connection.execute("select constraint_name from information_schema.table_constraints
-where table_name = '#{quote_table_name(table_name)}' and constraint_type = 'PRIMARY_KEY'")
-          res[0].try(:first).try(:first)
+where table_name = '#{table_name}' and constraint_type = 'PRIMARY_KEY'")
+          res.try(:first).map(&:first)
         end
 
         # overriding as Crate does not support "version primary key" syntax. Need to add the column type.
@@ -78,6 +78,10 @@ where table_name = '#{quote_table_name(table_name)}' and constraint_type = 'PRIM
         def add_reference(table_name, column_name, options = {})
           options[:type] ||= :string
           super(table_name, column_name, options)
+        end
+
+        def views
+          []
         end
 
       end

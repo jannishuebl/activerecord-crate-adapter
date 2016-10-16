@@ -48,7 +48,9 @@ describe "Post#array" do
     let(:array) { %w(hot fresh) }
     let(:votes) { [9, 8, 7] }
     let(:bool_arr) { [true, false, true] }
-    let(:post) { Post.create!(title: 'Arrays are awesome', tags: array, votes: votes, bool_arr: bool_arr) }
+    let(:post) do 
+      Post.create!(title: 'Arrays are awesome', tags: array, votes: votes, bool_arr: bool_arr)
+    end
 
     context 'create' do
       it 'should store and return an array' do

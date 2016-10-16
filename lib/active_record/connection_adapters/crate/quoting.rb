@@ -23,6 +23,17 @@ module ActiveRecord
   module ConnectionAdapters
     module Crate
       module Quoting
+        def fetch_type_metadata(sql_type, crate_options = {})
+          cast_type = lookup_cast_type(sql_type)
+          Crate::TypeMetadata.new(
+            sql_type: sql_type,
+            type: cast_type.type,
+            limit: cast_type.limit,
+            precision: cast_type.precision,
+            scale: cast_type.scale
+          )
+        end
+
         def quote_column_name(column_name)
           "\"#{column_name}\""
         end
@@ -38,6 +49,7 @@ module ActiveRecord
 
           value.iso8601
         end
+
       end
     end
   end

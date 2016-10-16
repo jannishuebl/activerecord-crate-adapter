@@ -27,4 +27,5 @@ class Post < ActiveRecord::Base
   def set_id
     self.id = SecureRandom.uuid
   end
+
 end

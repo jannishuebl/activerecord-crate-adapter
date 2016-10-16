@@ -28,22 +28,13 @@ module ActiveRecord
           result = do_exec_query(sql, name, binds)
         }
         fields = result.cols
-        ActiveRecord::Result.new(fields, result.values)
+        fields.count == 0 ? result.rowcount : ActiveRecord::Result.new(fields, result.values)
       end
 
       def do_exec_query(sql, name, binds)
         params = []
-        binds.each_with_index do |(column, value), index|
-          ar_column = column.is_a?(ActiveRecord::ConnectionAdapters::Column)
-          # only quote where clause values
-          unless ar_column # && column.sql_type == 'timestamp'
-            v = value
-            quoted_value = ar_column ? quote(v, column) : quote(v, nil)
-            params << quoted_value
-          else
-            params << value
-          end
-
+        binds.each_with_index do |column, index|
+          params << column.value_for_database
         end
         @connection.execute sql, params
       end

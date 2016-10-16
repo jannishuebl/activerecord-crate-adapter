@@ -1,0 +1,9 @@
+version: '2'
+services:
+    container:
+        build: .
+        command: sh -c '/bin/sleep 10 && echo "test" && bundle exec ruby spec/test_server.rb'
+        depends_on:
+                  - crate
+    crate:
+        image: crate
