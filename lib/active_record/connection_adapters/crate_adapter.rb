@@ -104,6 +104,7 @@ module ActiveRecord
         m.register_type 'string_array', Crate::Type::Array.new
         m.register_type 'integer_array', Crate::Type::Array.new
         m.register_type 'boolean_array', Crate::Type::Array.new
+        m.register_type 'timestamp', Crate::Type::DateTime.new
       end
 
       def adapter_name

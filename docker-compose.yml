@@ -2,7 +2,7 @@ version: '2'
 services:
     container:
         build: .
-        command: sh -c '/bin/sleep 10 && echo "test" && bundle exec ruby spec/test_server.rb'
+        command: /bin/su -s /bin/bash -c '/code/spec/test_server.rb' crate
         depends_on:
                   - crate
     crate:
