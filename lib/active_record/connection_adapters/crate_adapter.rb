@@ -74,6 +74,7 @@ module ActiveRecord
           float: {name: "float"},
           binary: {name: "byte"},
           datetime: {name: "timestamp"},
+          geo_point: {name: "geo_point"},
           timestamp: {name: "timestamp"},
           object: {name: "object"},
           array: {name: "array"},
@@ -105,6 +106,7 @@ module ActiveRecord
         m.register_type 'integer_array', Crate::Type::Array.new
         m.register_type 'boolean_array', Crate::Type::Array.new
         m.register_type 'timestamp', Crate::Type::DateTime.new
+        m.register_type 'geo_point', Crate::Type::GeoPoint.new
       end
 
       def adapter_name
@@ -215,6 +217,10 @@ module ActiveRecord
           array_type = options.delete(:array_type)
           raise "Array columns must specify an :array_type (e.g. array_type: :string)" unless array_type.present?
           column name, "array(#{array_type})", options.merge(array: true)
+        end
+
+        def geo_point(name, options = {})
+          column name, "geo_point", options
         end
 
         def hstore(name, options = {})

@@ -1,6 +1,7 @@
 require 'active_record/type'
 require 'active_record/connection_adapters/crate/type/array.rb'
 require 'active_record/connection_adapters/crate/type/date_time.rb'
+require 'active_record/connection_adapters/crate/type/geo_point.rb'
 
 module ActiveRecord
   module Type
