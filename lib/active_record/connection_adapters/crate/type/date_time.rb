@@ -11,6 +11,7 @@ module ActiveRecord
 
 
           def serialize(value)
+            return nil unless value
             return value if value.is_a? Integer
             value = value.to_time if value.respond_to? :to_time
             value.to_i

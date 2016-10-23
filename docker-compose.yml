@@ -2,8 +2,7 @@ version: '2'
 services:
     container:
         build: .
-        command: /bin/su -s /bin/bash -c '/code/spec/test_server.rb' crate
-        depends_on:
-                  - crate
-    crate:
-        image: crate
+        #command: /bin/su -s /bin/bash -c '/code/spec/test_server.rb' crate
+        command: /bin/bash
+        volumes:
+            - .:/code

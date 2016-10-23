@@ -27,6 +27,7 @@ describe "Post#date_time" do
     ActiveRecord::Migration.class_eval do
       create_table :posts do |t|
         t.datetime :time
+        t.datetime :empty_date
       end
     end
     Post.reset_column_information
@@ -56,6 +57,17 @@ describe "Post#date_time" do
           p.time.should be_a Time
           p.time.to_i.should eq date_in_time.to_i
         end
+      end
+
+      it 'should return correct values' do
+        Post.create!(time: time)
+        post.time.to_i.should eq time.to_i
+        post.empty_date.should be_nil
+      end
+
+      it 'should be nil' do
+        p = Post.find(post.id)
+        p.empty_date.should be_nil
       end
 
       it 'should store and return an Time' do
